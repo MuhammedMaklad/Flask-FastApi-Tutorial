@@ -1,6 +1,5 @@
-from crypt import methods
-
 from flask import Blueprint, request, jsonify
+from flask import render_template, abort
 import logging
 
 """
@@ -66,4 +65,32 @@ def test2(username):
 @router.route("/post/<int:post_id>")
 def post(post_id):
     # show the post with given id
-    return "post %d" % post_id
+    return f"post {post_id}"
+
+""" - Templates - """
+@router.route("/greeting")
+@router.route("/greeting/<string:name>")
+def greeting(name=None):
+    return render_template("greeting.html", name=name)
+
+
+""" - Form & Request Object - """
+@router.route("/formtest", methods=['POST','GET'])
+def form_test():
+    if request.method == "POST":
+        if 'username' not in request.form:
+            abort(404,description="No username provided")
+        username = request.form.get('username', 'Guest')  # Default to 'Guest' if missing
+        return f"Your Username is => {username}, Welcome"
+    return """
+        <form method="post" action="/formtest"> 
+            Name: <input type="text" name="name"><br>
+            <input type="submit" value="Submit">
+        </form>
+    """
+
+
+
+@router.errorhandler(404)
+def page_not_found(error):
+    return render_template('page_not_found.html'), 404

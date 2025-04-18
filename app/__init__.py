@@ -11,7 +11,7 @@ def create_app():
     """
         - Creates a Flask application instance and loads configuration settings from a Config class defined in a config.py file.    
     """
-    app.config.from_object('config.Config')
+    # app.config.from_object('config.Config')
 
     # Initialize extensions
     """
@@ -19,8 +19,8 @@ def create_app():
     """
 
     # Register blueprints
-    from app.routes import main_bp
-    app.register_blueprint(main_bp)
+    from app.routes import router
+    app.register_blueprint(router)
 
     """
     Registers a blueprint from app.routes. 
